@@ -1,6 +1,7 @@
 from flask import Flask, render_template , request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+
 from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
 
@@ -48,7 +49,7 @@ def create():
 	db.session.add(user_)
 	db.session.commit()
 
-	response = render_template("template.html", phon=phone)
+	response = render_template("template.html", phon=phone, password=password)
 	return response
 
 @app.route('/login')
@@ -62,7 +63,7 @@ def login():
 	if user.password!= password:
 		return 'Incorrect password'
 	todos=UserTodo.query.filter_by(phone=phone).all()
-	session["user"] = phone
+	# session["user"] = phone
 	return render_template("template.html", todo_list=todos, phon=phone, password=password)
 
 @app.route('/logout')
@@ -82,7 +83,7 @@ def add(ph, password):
 	# if not user:
 	# 	return "Please log in"
 	new_title=request.form.get('title')
-	todo=UserTodo(title=new_title, complete=False, phone=ph)
+	todo=UserTodo(title=new_title, complete=False, phone=ph) 
 	db.session.add(todo)
 	db.session.commit()
 	return redirect('/login?phone_num='+str(ph)+ '&password=' + password)
