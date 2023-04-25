@@ -93,16 +93,18 @@ def add(ph, password):
 @app.route("/update/<int:todo_id>")
 def update(todo_id):
 	todo=UserTodo.query.filter_by(id=todo_id).first()
+	user=User.query.filter_by(phone=todo.phone).first()
 	todo.complete= not todo.complete
 	db.session.commit()
-	return redirect('/login?phone_num='+str(todo.phone))	
+	return redirect('/login?phone_num='+str(todo.phone)+ '&password=' + user.password)
 
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
 	todo=UserTodo.query.filter_by(id=todo_id).first()
+	user=User.query.filter_by(phone=todo.phone).first()
 	db.session.delete(todo)
 	db.session.commit()
-	return redirect('/login?phone_num='+str(todo.phone))
+	return redirect('/login?phone_num='+str(todo.phone)+ '&password=' + user.password)
 
 
 
